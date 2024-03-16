@@ -1,11 +1,15 @@
 // 和用户相关的状态管理
 import { createSlice } from "@reduxjs/toolkit";
-import { request } from "@/utils";
+// import { request,  getToken as _getToken,
+//     setToken as _setToken} from "@/utils";
+import {  getToken,
+    setToken as _setToken} from "@/utils";
+// import { loginAPI } from "@/apis/userAPI";
 
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        token: null,
+        token: getToken() || null,
         // 用户信息
         userInfo: null,
     },
@@ -13,10 +17,32 @@ const userSlice = createSlice({
         // 同步数据修改方法
         setToken: (state, action) => {
             state.token = action.payload;
+            _setToken(action.payload)
         },
         setUserInfo: (state, action) => {
             state.userInfo = action.payload;
-        }
+            localStorage.setItem("userInfo", action.payload);
+        },
+        // 异步数据修改方法
+        // login: (state, action) => {
+        //     // 调用登录接口
+        //     request.post('/login', action.payload).then(res => {
+        //         // 登录成功后，保存token
+        //         state.token = res.data.token;
+        //         // 保存用户信息
+        //         state.userInfo = res.data.userInfo;
+
+        //         // 跳转到首页
+        //         navigates('/');
+        //     }
+        // }
+        // }
+        // 跳转方法
+        // navigate: (state, action) => {
+            // const navigates = useNavigate();
+            // navigates(state);
+        // }
+           
     }
     
 })
@@ -25,17 +51,19 @@ const userSlice = createSlice({
  const { setToken, setUserInfo } = userSlice.actions;
  const userReducer = userSlice.reducer;
 
-// 异步方法  完成登录
-const login = (username, password) => {
-    return async (dispatch) => {
-        // 调用登录接口
-        const res = await request.post("/login", { username, password });
-        // 保存token
+ // 异步方法  完成登录
+ const login = (username, password) => {
+     return (dispatch) => {
+         // 调用登录接口
+        //  const res = await loginAPI("/login", { username, password });
+         const res = {data:{token:"token",user:"admin"}};
+         // 保存token
         dispatch(setToken(res.data.token));
         // 保存用户信息
         dispatch(setUserInfo(res.data.user));
         // 跳转到首页
-        // history.push("/");
+        
+        // navigates("./")
 
     }
 }

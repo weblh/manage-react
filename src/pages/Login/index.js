@@ -1,7 +1,9 @@
 import React from 'react';
-import { Button, Form, Input, Select, Space } from 'antd';
-import { useDispatch } from 'react-redux';
-import { login } from '@/store/modules/uers'
+import { Button, Form, Input, Select, Space, message } from 'antd';
+import { useDispatch} from 'react-redux';
+import { login } from '@/store/modules/uers';
+
+import { useNavigate } from 'react-router-dom';
 const { Option } = Select;
 const layout = {
   labelCol: {
@@ -40,11 +42,16 @@ const Login = () => {
     }
   };
   const dispatch = useDispatch();
-  const onFinish = (values) => {
+  const navigate = useNavigate();
+  const onFinish = async(values) => {
     console.log(values);
     // 处理登录逻辑
     // 触发异步action
-    dispatch(login(values.username, values.password));
+    await dispatch(login(values.username, values.password));
+    // 登录成功后跳转到首页
+    navigate("/")
+
+    message.success('登录成功！');
 
   };
   const onReset = () => {

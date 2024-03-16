@@ -22,7 +22,8 @@
 
 
 
-import axios from 'axios';  
+import axios from 'axios';
+import { getToken } from '@/utils/index';
 // import qs from 'qs'; // 用于请求数据自动序列化  
   
 // 1. 根域名配置  
@@ -43,6 +44,10 @@ instance.interceptors.request.use(
   config => {  
     // 在发送请求之前做些什么  
     // 例如，添加请求头、设置 token 等  
+    const token = getToken();
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
     return config;  
   },  
   error => {  
